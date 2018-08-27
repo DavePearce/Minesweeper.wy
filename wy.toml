@@ -1,0 +1,7 @@
+[package]
+name="minesweeper"
+author="David J. Pearce"
+version="0.1.0"
+
+[dependencies]
+wystd="0.2.5"
