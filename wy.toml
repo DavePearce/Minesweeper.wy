@@ -1,6 +1,6 @@
 [package]
 name="minesweeper"
-author="David J. Pearce"
+authors=["David J. Pearce"]
 version="0.1.0"
 
 [dependencies]
