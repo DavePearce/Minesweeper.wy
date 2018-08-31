@@ -3,5 +3,8 @@ name="minesweeper"
 authors=["David J. Pearce"]
 version="0.1.0"
 
+[build]
+platforms=["whiley","js"]
+
 [dependencies]
 std="0.2.5"
