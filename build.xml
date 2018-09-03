@@ -1,0 +1,35 @@
+<project name="wybench" default="compile">
+
+  <!-- ================================================================== -->
+  <!-- Configuration -->
+  <!-- ================================================================== -->
+  <import file="config.xml"/>
+
+  <!-- ================================================================== -->
+  <!-- Compile -->
+  <!-- ================================================================== -->
+
+  <target name="compile">
+    <java classname="wycc.WyMain">
+      <arg value="build"/>
+      <classpath>
+	<path refid="wyc.jar"/>	
+      </classpath>
+    </java>
+  </target>
+
+  <!-- ================================================================== -->
+  <!-- Clean -->
+  <!-- ================================================================== -->
+
+  <target name="clean">
+    <delete includeEmptyDirs="true" failonerror="false">
+      <fileset dir="bin" includes="**/*"/>
+      <fileset dir="bin"/>
+    </delete>
+    <echo message="============================================="/>
+    <echo message="CLEANED: ${ant.project.name}"/>
+    <echo message="============================================="/>
+  </target>
+  
+</project>
