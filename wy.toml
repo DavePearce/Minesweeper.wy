@@ -6,5 +6,8 @@ version="0.1.0"
 [build]
 platforms=["whiley","js"]
 
+[build.whiley]
+verify=true
+
 [dependencies]
 std="0.2.6"

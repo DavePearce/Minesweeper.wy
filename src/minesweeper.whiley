@@ -23,10 +23,11 @@ type HiddenSquare is {
 
 // Every square on the board is either an exposed square or a hidden
 // square.
-type Square is ExposedSquare | HiddenSquare
+public type Square is ExposedSquare | HiddenSquare
 
 // ExposedSquare constructor
-export function ExposedSquare(int rank, bool bomb) -> ExposedSquare:
+export function ExposedSquare(nat rank, bool bomb) -> ExposedSquare
+requires rank <= 8:
     return { rank: rank, holdsBomb: bomb }
 
 // HiddenSquare constructor
