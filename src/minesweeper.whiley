@@ -114,7 +114,7 @@ requires col < b.width && row < b.height:
 
 export
 // Attempt to recursively expose blank hidden square, starting from a given position.
-function exposeSquare(Board b, int col, int row) -> Board:
+function exposeSquare(Board b, nat col, nat row) -> Board:
     // Check whether is blank hidden square
     Square sq = getSquare(b,col,row)
     int rank = determineRank(b,col,row)
@@ -129,7 +129,7 @@ function exposeSquare(Board b, int col, int row) -> Board:
     return b
 
 // Recursively expose all valid neighbouring squares on the board
-function exposeNeighbours(Board b, int col, int row) -> Board:
+function exposeNeighbours(Board b, nat col, nat row) -> Board:
     int r = math::max(0,row-1)
     while r != math::min(b.height,row+2):
         int c = math::max(0,col-1)

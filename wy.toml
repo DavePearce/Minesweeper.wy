@@ -7,7 +7,13 @@ version="0.1.0"
 platforms=["whiley","js"]
 
 [build.whiley]
-verify=true
+verify=false
+
+[check]
+min=-2
+max=2
+length=3
+depth=1
 
 [dependencies]
-std="0.2.6"
+std="0.2.10"
