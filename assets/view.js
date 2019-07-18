@@ -5,7 +5,7 @@ var SQUARE_HEIGHT=30;
  * Determine the appropriate image to use for rendering this square.
  */
 function selectSquareImage(game,square) {
-    if(is$n13ExposedSquare(square)) {
+    if(is$u2r2I4rankB9holdsBombr2B9holdsBombB7flaggedQ13ExposedSquare(square)) {
 	if(square.holdsBomb) {
 	    return game.bomb;
 	} else {
@@ -24,7 +24,7 @@ function selectSquareImage(game,square) {
 function drawSquare(game,x,y) {
     var canvas = game.canvas;
     var ctx = canvas.getContext("2d");
-    var square = getSquare(game.board,x,y);
+    var square = minesweeper$getSquare(game.board,x,y);
     var image = selectSquareImage(game,square);
     ctx.drawImage(image,x*SQUARE_WIDTH,y*SQUARE_HEIGHT,SQUARE_WIDTH,SQUARE_HEIGHT);    
 }
@@ -56,13 +56,13 @@ function randomBomb(nBombs,remaining) {
  * All bombs are placed randomly on the board.
  */
 function createRandomBoard(width,height,nBombs) {
-    var board = Board(width,height);
+    var board = minesweeper$Board(width,height);
     var remaining = width * height;
     for(var x=0;x<board.width;x=x+1) {
 	for(var y=0;y<board.height;y=y+1) {
 	    var bomb = randomBomb(nBombs,remaining);
-	    var square = HiddenSquare(bomb,false);
-	    board = setSquare(board,x,y,square);
+	    var square = minesweeper$HiddenSquare(bomb,false);
+	    board = minesweeper$setSquare(board,x,y,square);
 	    if(bomb) { nBombs = nBombs - 1; }
 	    remaining = remaining - 1;
 	}
@@ -80,11 +80,11 @@ function onExposeEvent(game, x, y) {
     x = Math.floor(x / SQUARE_WIDTH);
     y = Math.floor(y / SQUARE_HEIGHT);
     // Update the board model
-    game.board = exposeSquare(game.board,x,y);
+    game.board = minesweeper$exposeSquare(game.board,x,y);
     // Redraw the board
     drawBoard(game);
     //
-    var tmp = isGameOver(game.board);
+    var tmp = minesweeper$isGameOver(game.board);
     //
     if(tmp[0]) {
 	if(tmp[1]) {
@@ -105,7 +105,7 @@ function onFlagEvent(game, x, y) {
     x = Math.floor(x / SQUARE_WIDTH);
     y = Math.floor(y / SQUARE_HEIGHT);
     // Update the board model
-    game.board = flagSquare(game.board,x,y);
+    game.board = minesweeper$flagSquare(game.board,x,y);
     // Redraw the board
     drawBoard(game);
 }
