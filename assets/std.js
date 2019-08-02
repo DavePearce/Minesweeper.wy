@@ -1,3 +1,35 @@
+function std$array$equals$av1Tav1TII(lhs, rhs, start, end) {
+   return ((lhs.length >= end) && (rhs.length >= end)) && function() {
+      for(var i = start;i < end;i = i + 1) {
+         if(!Wy.equals(lhs[i], rhs[i]))  {
+            return false;
+         }
+      }
+      return true;
+   }();
+}
+function std$array$contains$av1Tv1TII(lhs, item, start, end) {
+   return function() {
+      for(var i = start;i < end;i = i + 1) {
+         if(Wy.equals(lhs[i], item))  {
+            return true;
+         }
+      }
+      return false;
+   }();
+}
+function std$array$unique_elements$av1TI(items, end) {
+   return function() {
+      for(var i = 0;i < end;i = i + 1) {
+         for(var j = i + 1;j < end;j = j + 1) {
+            if(!(!Wy.equals(items[i], items[j])))  {
+               return false;
+            }
+         }
+      }
+      return true;
+   }();
+}
 function std$array$first_index_of$av1Tv1T(items, item) {
    return std$array$first_index_of$av1Tv1TI(Wy.copy(items), Wy.copy(item), 0);
 }
@@ -98,16 +130,6 @@ function std$array$copy$av1TQ4uintav1TQ4uintQ4uint(src, srcStart, dest, destStar
       j = j + 1;
    }
    return Wy.copy(dest);
-}
-function std$array$equals$av1Tav1TII(lhs, rhs, start, end) {
-   return ((lhs.length >= end) && (rhs.length >= end)) && function() {
-      for(var i = start;i < end;i = i + 1) {
-         if(!Wy.equals(lhs[i], rhs[i]))  {
-            return false;
-         }
-      }
-      return true;
-   }();
 }
 function std$ascii$char$type(x) {
    return (0 <= x) && (x <= 127);
@@ -407,9 +429,6 @@ function std$integer$to_int$aU(bytes) {
       return val;
    }
 }
-function std$io$uint$type(x) {
-   return x >= 0;
-}
 function std$io$print$I(value) {
 }
 function std$io$print$Q5ascii6string(value) {
@@ -456,6 +475,16 @@ function std$math$isqrt$I(x) {
       delta = delta + 2;
    }
    return Math.floor(delta / 2) - 1;
+}
+function std$set$ArraySet$type(v) {
+   return std$array$unique_elements$av1TI(Wy.copy(v.items), v.length);
+}
+function std$set$insert$Q8ArraySetv1T(set, item) {
+   if(std$array$contains$av1Tv1TII(Wy.copy(set.items), Wy.copy(item), 0, set.length))  {
+      return Wy.copy(set);
+   } else  {
+      return std$vector$push$Q6Vectorv1T(Wy.copy(set), Wy.copy(item));
+   }
 }
 function std$utf8$uint$type(x) {
    return x >= 0;
@@ -535,10 +564,10 @@ function std$vector$Vector$type($) {
    return $.length <= $.items.length;
 }
 function std$vector$Vector() {
-   return Wy.record({items: [], length: 0});
+   return new Wy.Record({items: [], length: 0});
 }
 function std$vector$Vector$av1T(items) {
-   return Wy.record({items: Wy.copy(items), length: items.length});
+   return new Wy.Record({items: Wy.copy(items), length: items.length});
 }
 function std$vector$top$Q6Vector(vec) {
    return Wy.copy(vec.items[vec.length - 1]);
@@ -570,4 +599,7 @@ function std$vector$set$Q6VectorIv1T(vec, ith, item) {
 function std$vector$clear$Q6Vector(vec) {
    vec.length = 0;
    return Wy.copy(vec);
+}
+function std$vector$equals$Q6VectorQ6Vector(lhs, rhs) {
+   return (lhs.length === rhs.length) && std$array$equals$av1Tav1TII(Wy.copy(lhs.items), Wy.copy(rhs.items), 0, lhs.length);
 }

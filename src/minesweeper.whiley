@@ -9,8 +9,8 @@ import nat from std::integer
 // displays its "rank".  The rank is the count of bombs in the eight 
 // directly adjacent squares.
 type ExposedSquare is {
-    int rank,
-    bool holdsBomb
+    bool holdsBomb,
+    int rank
 } where rank >= 0 && rank <= 8
 
 // A hidden square is one which has yet to be revealed by the player.  A
@@ -23,7 +23,7 @@ type HiddenSquare is {
 
 // Every square on the board is either an exposed square or a hidden
 // square.
-public type Square is ExposedSquare | HiddenSquare
+type Square is ExposedSquare | HiddenSquare
 
 // ExposedSquare constructor
 export function ExposedSquare(nat rank, bool bomb) -> ExposedSquare
@@ -105,7 +105,7 @@ requires col < b.width && row < b.height:
         nat c = math::max(0,col-1)
         while c < math::min(b.width,col+2):
             Square sq = getSquare(b,c,r)
-            if sq.holdsBomb:
+            if holdsBomb(sq):
                 rank = rank + 1
             c = c + 1
         r = r + 1
@@ -165,4 +165,10 @@ function isGameOver(Board b) -> (bool gameOver, bool playerWon):
         i = i + 1
     //
     return isOver, hasWon
-   
+
+// This method shouldn't really be necessary but, for now, it is.
+function holdsBomb(Square sq) -> bool:
+    if sq is ExposedSquare:
+        return sq.holdsBomb
+    else:
+        return sq.holdsBomb

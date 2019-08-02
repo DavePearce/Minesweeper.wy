@@ -5,7 +5,7 @@ var SQUARE_HEIGHT=30;
  * Determine the appropriate image to use for rendering this square.
  */
 function selectSquareImage(game,square) {
-    if(is$u2r2I4rankB9holdsBombr2B9holdsBombB7flaggedQ13ExposedSquare(square)) {
+    if(typeof(square.rank) !== 'undefined') {
 	if(square.holdsBomb) {
 	    return game.bomb;
 	} else {
