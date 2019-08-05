@@ -9,6 +9,9 @@ platforms=["whiley","js"]
 [build.whiley]
 verify=false
 
+[build.js]
+standard="ES6"
+
 [check]
 min=-3
 max=3
