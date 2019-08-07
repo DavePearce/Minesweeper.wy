@@ -103,23 +103,6 @@ Wy.equals = function(o1, o2) {
 };
 
 /**
- * Dereference a Whiley reference appropriately.
- */
-Wy.deref = function(x) {
-    return x.$ref;
-};
-
-/**
- * Create a Whiley record which ensures the constructor is set
- * appropriately.
- */
-Wy.record = function(x) {
-    // Use Record constructor here to ensure that instanceof works
-    // correctly for Whiley records.
-    return new Wy.Record(x);
-};
-
-/**
  * Whiley record constructor.
  */
 Wy.Record = function(x) {
@@ -134,3 +117,57 @@ Wy.Record = function(x) {
 Wy.Ref = function(x) {
     this.$ref = x;
 };
+
+/**
+ * Embed HTML generated from Whiley into a DOM node.  In principle,
+ * this should perform a diff against the original node (though it
+ * currently does not).
+ */
+Wy.embed = function(node,contents) {
+    // Check whether we have a leaf which corresponds to a text node.
+    // This is an array because strings are represented as arrays in
+    // Whiley.
+    if(contents.constructor === Array) {
+	var text = Wy.fromString(contents);
+	var child = document.createTextNode(text);
+	node.appendChild(child);
+    } else {
+	// Create new node
+	var name = Wy.fromString(contents.name);
+	var child = document.createElement(name);
+	node.appendChild(child);
+	// Set attributes
+	var attributes = contents.attributes;
+	for(var i=0;i!=attributes.length;i=i+1) {
+	    if(attributes[i].key) {
+		// A text attribute
+		var key = Wy.fromString(attributes[i].key);		
+		var value = Wy.fromString(attributes[i].value);
+		child.setAttribute(key,value);
+	    } else {
+		// An event attribute
+		var event = Wy.fromString(attributes[i].event);
+		var handler = attributes[i].handler;
+		child.addEventListener(event,handler);
+	    }
+	}
+	// Embed children
+	var children = contents.children;
+	for(var i=0;i!=children.length;i=i+1) {
+	    Wy.embed(child,children[i]);
+	}
+    }
+}
+
+/**
+ * Convert a Whiley string into a JavaScript string.  This is done by
+ * converting each character code in the array into a JavaScript
+ * string character.
+ */
+Wy.fromString = function(whileyString) {
+    var result = "";
+    for (var i = 0; i < whileyString.length; i++) {
+	result += String.fromCharCode(whileyString[i]);
+    }
+    return result;
+}
