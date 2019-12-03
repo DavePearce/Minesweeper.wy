@@ -1,4 +1,4 @@
-import std::math
+import std::math with min,max
 import nat from std::integer
 
 // =================================================================
@@ -100,15 +100,11 @@ function determineRank(Board b, nat col, nat row) -> int
 requires col < b.width && row < b.height:
     int rank = 0
     // Calculate the rank
-    nat r = math::max(0,row-1)
-    while r < math::min(b.height,row+2):
-        nat c = math::max(0,col-1)
-        while c < math::min(b.width,col+2):
+    for r in max(0,row-1) .. min(b.height,row+2):
+        for c in max(0,col-1) .. min(b.width,col+2):
             Square sq = getSquare(b,c,r)
             if holdsBomb(sq):
                 rank = rank + 1
-            c = c + 1
-        r = r + 1
     //
     return rank
 
@@ -132,13 +128,9 @@ requires col < b.width && row < b.height:
 // Recursively expose all valid neighbouring squares on the board
 function exposeNeighbours(Board b, nat col, nat row) -> Board
 requires col < b.width && row < b.height:
-    int r = math::max(0,row-1)
-    while r != math::min(b.height,row+2):
-        int c = math::max(0,col-1)
-        while c != math::min(b.width,col+2):
+    for r in max(0,row-1) .. min(b.height,row+2):
+        for c in max(0,col-1) .. min(b.width,col+2):
            b = exposeSquare(b,c,r)
-           c = c + 1
-        r = r + 1
     //
     return b
 
@@ -151,8 +143,8 @@ export
 function isGameOver(Board b) -> (bool gameOver, bool playerWon):
     bool isOver = true
     bool hasWon = true
-    int i = 0
-    while i < |b.squares|:
+    // Check all squares are hidden except mines
+    for i in 0..|b.squares|:
         Square sq = b.squares[i]
         if sq is HiddenSquare && !sq.holdsBomb:
             // Hidden square which doesn't hold a bomb so game may not be over
@@ -162,7 +154,6 @@ function isGameOver(Board b) -> (bool gameOver, bool playerWon):
             isOver = true
             hasWon = false
             break
-        i = i + 1
     //
     return isOver, hasWon
 
