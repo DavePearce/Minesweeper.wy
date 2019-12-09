@@ -19,4 +19,4 @@ length=3
 depth=1
 
 [dependencies]
-js="0.1.4"
+html="0.1.12"

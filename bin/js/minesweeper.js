@@ -1,93 +1,155 @@
 'use strict';
-function minesweeper$ExposedSquare$type($) {
+function main$add_random_bombs$Q5model5BoardQ4uint(board, n) {
+   let remaining = board.squares.length;
+   for(let x = 0;x < board.width;x = x + 1) {
+      for(let y = 0;y < board.height;y = y + 1) {
+         if(js$math$random(remaining) < n)  {
+            let s = model$HiddenSquare(true, false);
+             {
+               const $0 = model$set_square(Wy.copy(board), x, y, Wy.copy(s));
+               board = $0;
+            }
+             {
+               const $1 = n - 1;
+               n = $1;
+            }
+         }
+          {
+            const $2 = remaining - 1;
+            remaining = $2;
+         }
+      }
+   }
+   return Wy.copy(board);
+}
+function main$onclick_handler$Q10MouseEventqQ4view5State(e, state) {
+   let x = Math.floor(e.offsetX / state.$ref.gridsize);
+   let y = Math.floor(e.offsetY / state.$ref.gridsize);
+   if(e.shiftKey)  {
+       {
+         const $3 = model$flag_square(state.$ref.board, x, y);
+         state.$ref.board = $3;
+      }
+   } else  {
+       {
+         const $4 = model$expose_square(state.$ref.board, x, y);
+         state.$ref.board = $4;
+      }
+   }
+   view$draw_board$Q5State(state.$ref);
+   let [gameOver, winner] = model$is_gameover(state.$ref.board);
+   if(gameOver)  {
+      if(winner)  {
+         w3c$dom$alert(Wy.toString("Well done --- You Found all the Mines!"));
+      } else  {
+         w3c$dom$alert(Wy.toString("Game Over --- You Lost!"));
+      }
+   }
+}
+function main$main(width, height, bombs, document, canvas, images) {
+   let c = document.getElementById(js$util$from_string(Wy.toString("myCanvas")));
+   let board = model$Board(width, height);
+    {
+      const $5 = main$add_random_bombs$Q5model5BoardQ4uint(Wy.copy(board), bombs);
+      board = $5;
+   }
+   let state = new Wy.Ref(view$init$Q8DocumentQ17HTMLCanvasElementQ5BoardaQ16HTMLImageElement(document, canvas, Wy.copy(board), Wy.copy(images)));
+   view$draw_board$Q5State(state.$ref);
+   c.addEventListener(js$util$from_string(Wy.toString("click")), function(state) {
+      return function(e) {
+         return main$onclick_handler$Q10MouseEventqQ4view5State(e, state);
+      };
+   }(state));
+}
+function model$ExposedSquare$type($) {
    return ($.rank >= 0) && ($.rank <= 8);
 }
-function minesweeper$ExposedSquare(rank, bomb) {
+function model$ExposedSquare(rank, bomb) {
    return new Wy.Record({rank: rank, holdsBomb: bomb});
 }
-function minesweeper$HiddenSquare(bomb, flag) {
+function model$HiddenSquare(bomb, flag) {
    return new Wy.Record({holdsBomb: bomb, flagged: flag});
 }
-function minesweeper$Board$type($) {
+function model$Board$type($) {
    return ($.width * $.height) === $.squares.length;
 }
-function minesweeper$Board(width, height) {
+function model$Board(width, height) {
    Wy.assert((width * height) >= 0);
-   let squares = Wy.array(minesweeper$HiddenSquare(false, false), width * height);
+   let squares = Wy.array(model$HiddenSquare(false, false), width * height);
    return new Wy.Record({squares: Wy.copy(squares), width: width, height: height});
 }
-function minesweeper$getSquare(b, col, row) {
+function model$get_square(b, col, row) {
    let rowOffset = b.width * row;
    Wy.assert(rowOffset >= 0);
    Wy.assert(rowOffset <= (b.squares.length - b.width));
    return Wy.copy(b.squares[rowOffset + col]);
 }
-function minesweeper$setSquare(b, col, row, sq) {
+function model$set_square(b, col, row, sq) {
    let rowOffset = b.width * row;
    Wy.assert(rowOffset >= 0);
    Wy.assert(rowOffset <= (b.squares.length - b.width));
    b.squares[rowOffset + col] = Wy.copy(sq);
    return Wy.copy(b);
 }
-function minesweeper$flagSquare(b, col, row) {
-   let sq = minesweeper$getSquare(Wy.copy(b), col, row);
+function model$flag_square(b, col, row) {
+   let sq = model$get_square(Wy.copy(b), col, row);
    if(is$Q6Squarer2B9holdsBombB7flagged(sq))  {
        {
-         const $0 = !sq.flagged;
-         sq.flagged = $0;
+         const $6 = !sq.flagged;
+         sq.flagged = $6;
       }
        {
-         const $1 = minesweeper$setSquare(Wy.copy(b), col, row, Wy.copy(sq));
-         b = $1;
+         const $7 = model$set_square(Wy.copy(b), col, row, Wy.copy(sq));
+         b = $7;
       }
    }
    return Wy.copy(b);
 }
-function minesweeper$determineRank$Q5BoardQ3natQ3nat(b, col, row) {
+function model$determineRank$Q5BoardQ4uintQ4uint(b, col, row) {
    let rank = 0;
    for(let r = std$math$max$II(0, row - 1);r < std$math$min$II(b.height, row + 2);r = r + 1) {
       for(let c = std$math$max$II(0, col - 1);c < std$math$min$II(b.width, col + 2);c = c + 1) {
-         let sq = minesweeper$getSquare(Wy.copy(b), c, r);
-         if(minesweeper$holdsBomb$Q6Square(Wy.copy(sq)))  {
+         let sq = model$get_square(Wy.copy(b), c, r);
+         if(model$holds_bomb$Q6Square(Wy.copy(sq)))  {
              {
-               const $2 = rank + 1;
-               rank = $2;
+               const $8 = rank + 1;
+               rank = $8;
             }
          }
       }
    }
    return rank;
 }
-function minesweeper$exposeSquare(b, col, row) {
-   let sq = minesweeper$getSquare(Wy.copy(b), col, row);
-   let rank = minesweeper$determineRank$Q5BoardQ3natQ3nat(Wy.copy(b), col, row);
+function model$expose_square(b, col, row) {
+   let sq = model$get_square(Wy.copy(b), col, row);
+   let rank = model$determineRank$Q5BoardQ4uintQ4uint(Wy.copy(b), col, row);
    if(is$Q6Squarer2B9holdsBombB7flagged(sq) && (!sq.flagged))  {
        {
-         const $3 = minesweeper$ExposedSquare(rank, sq.holdsBomb);
-         sq = $3;
+         const $9 = model$ExposedSquare(rank, sq.holdsBomb);
+         sq = $9;
       }
        {
-         const $4 = minesweeper$setSquare(Wy.copy(b), col, row, Wy.copy(sq));
-         b = $4;
+         const $10 = model$set_square(Wy.copy(b), col, row, Wy.copy(sq));
+         b = $10;
       }
       if(rank === 0)  {
-         return minesweeper$exposeNeighbours$Q5BoardQ3natQ3nat(Wy.copy(b), col, row);
+         return model$expose_neighbours$Q5BoardQ4uintQ4uint(Wy.copy(b), col, row);
       }
    }
    return Wy.copy(b);
 }
-function minesweeper$exposeNeighbours$Q5BoardQ3natQ3nat(b, col, row) {
+function model$expose_neighbours$Q5BoardQ4uintQ4uint(b, col, row) {
    for(let r = std$math$max$II(0, row - 1);r < std$math$min$II(b.height, row + 2);r = r + 1) {
       for(let c = std$math$max$II(0, col - 1);c < std$math$min$II(b.width, col + 2);c = c + 1) {
           {
-            const $5 = minesweeper$exposeSquare(Wy.copy(b), c, r);
-            b = $5;
+            const $11 = model$expose_square(Wy.copy(b), c, r);
+            b = $11;
          }
       }
    }
    return Wy.copy(b);
 }
-function minesweeper$isGameOver(b) {
+function model$is_gameover(b) {
    let playerWon;
    let gameOver;
    let isOver = true;
@@ -106,11 +168,56 @@ function minesweeper$isGameOver(b) {
    }
    return [isOver, hasWon];
 }
-function minesweeper$holdsBomb$Q6Square(sq) {
+function model$holds_bomb$Q6Square(sq) {
    if(is$Q6SquareQ13ExposedSquare(sq))  {
       return sq.holdsBomb;
    } else  {
       return sq.holdsBomb;
+   }
+}
+const view$BOMB$static = 0;
+const view$HIDDEN$static = 1;
+const view$FLAGGED$static = 2;
+const view$EXPOSED$static = 3;
+const view$BLANK$static = 4;
+function view$State$type($) {
+   return $.images.length === 13;
+}
+function view$init$Q8DocumentQ17HTMLCanvasElementQ5BoardaQ16HTMLImageElement(document, canvas, board, images) {
+   let ctx = canvas.getContext(js$util$from_string(Wy.toString("2d")));
+   return new Wy.Record({images: Wy.copy(images), ctx: ctx, board: Wy.copy(board), gridsize: 24});
+}
+function view$determine_image$Q5StateQ6Square(state, square) {
+   if(is$Q6Squarer2B9holdsBombB7flagged(square))  {
+      if(square.flagged)  {
+         return state.images[view$FLAGGED$static];
+      } else  {
+         return state.images[view$HIDDEN$static];
+      }
+   } else  {
+      if(square.holdsBomb)  {
+         return state.images[view$BOMB$static];
+      } else  {
+         return state.images[view$BLANK$static + square.rank];
+      }
+   }
+}
+function view$draw_square$Q5StateQ4uintQ4uint(state, x, y) {
+   let square = model$get_square(Wy.copy(state.board), x, y);
+    {
+      const $12 = x * state.gridsize;
+      const $13 = y * state.gridsize;
+      x = $12;
+      y = $13;
+   }
+   let img = view$determine_image$Q5StateQ6Square(Wy.copy(state), Wy.copy(square));
+   state.ctx.drawImage(img, x, y);
+}
+function view$draw_board$Q5State(state) {
+   for(let x = 0;x < state.board.width;x = x + 1) {
+      for(let y = 0;y < state.board.height;y = y + 1) {
+         view$draw_square$Q5StateQ4uintQ4uint(Wy.copy(state), x, y);
+      }
    }
 }
 function is$Q6Squarer2B9holdsBombB7flagged(v) {
@@ -122,10 +229,10 @@ function is$Q6Squarer2B9holdsBombB7flagged(v) {
    return true;
 }
 function is$u2Q13ExposedSquareQ12HiddenSquareQ13ExposedSquare(v) {
-   return is$u2Q13ExposedSquareQ12HiddenSquarer2B9holdsBombI4rank(v) && minesweeper$ExposedSquare$type(v);
+   return is$u2Q13ExposedSquareQ12HiddenSquarer2B9holdsBombI4rank(v) && model$ExposedSquare$type(v);
 }
 function is$Q6SquareQ13ExposedSquare(v) {
-   return is$Q6Squarer2B9holdsBombI4rank(v) && minesweeper$ExposedSquare$type(v);
+   return is$Q6Squarer2B9holdsBombI4rank(v) && model$ExposedSquare$type(v);
 }
 function is$u2Q13ExposedSquareQ12HiddenSquarer2B9holdsBombI4rank(v) {
    if(((typeof v.holdsBomb) === "undefined") || ((typeof v.holdsBomb) !== "boolean"))  {

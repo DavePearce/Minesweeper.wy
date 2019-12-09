@@ -1,31 +1,70 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <html> <head>
 <title></title>
-<script type="text/javascript" src="assets/view.js"></script>
 <script type="text/javascript" src="bin/js/std.js"></script>
 <script type="text/javascript" src="bin/js/js.js"></script>
+<script type="text/javascript" src="bin/js/html.js"></script>
 <script type="text/javascript" src="bin/js/minesweeper.js"></script>
 </head>
 
 <body bgcolor="#ffffff">
 <h1>Minesweeper (in Whiley)</h1>
 <center>
-<canvas id="myCanvas" tabindex="1" width="300" height="300"></canvas>
+  <div>
+    <button onclick="run(8,8,10);">Beginner (8x8)</button>
+    <button onclick="run(16,16,40);">Intermediate (16x16)</button>
+    <button onclick="run(30,24,99);">Expert (30x24)</button>
+  </div>
+  <br/>
+  <br/>  
+  <canvas id="myCanvas" tabindex="1" width="720" height="384"></canvas>  
 </center>
 <center><p>
 <i>(use shift-click to flag squares)</i>
 </p></center>
-<h2>Images</h2>
-<img id="blank" src="assets/images/ExposedBlankSquare.png"/>
-<img id="bomb" src="assets/images/ExposedBombSquare.png"/>
-<img id="hidden" src="assets/images/HiddenSquare.png"/>
-<img id="flagged" src="assets/images/HiddenSquareFlagged.png"/>
-<img id="one" src="assets/images/ExposedSquare1.png"/>
-<img id="two" src="assets/images/ExposedSquare2.png"/>
-<img id="three" src="assets/images/ExposedSquare3.png"/>
-<img id="four" src="assets/images/ExposedSquare4.png"/>
+<img id="blank" style="display:none" src="assets/images/ExposedBlankSquare.png"/>
+<img id="bomb" style="display:none" src="assets/images/ExposedBombSquare.png"/>
+<img id="hidden" style="display:none" src="assets/images/HiddenSquare.png"/>
+<img id="flagged" style="display:none" src="assets/images/HiddenSquareFlagged.png"/>
+<img id="one" style="display:none" src="assets/images/ExposedSquare1.png"/>
+<img id="two" style="display:none" src="assets/images/ExposedSquare2.png"/>
+<img id="three" style="display:none" src="assets/images/ExposedSquare3.png"/>
+<img id="four" style="display:none" src="assets/images/ExposedSquare4.png"/>
+<img id="five" style="display:none" src="assets/images/ExposedSquare5.png"/>
+<img id="six" style="display:none" src="assets/images/ExposedSquare6.png"/>
+<img id="seven" style="display:none" src="assets/images/ExposedSquare7.png"/>
+<img id="eight" style="display:none" src="assets/images/ExposedSquare8.png"/>
 <script>
-window.onload = function() { startGame(document); }
+  function run(width,height,bombs) {
+      // Clone canvas (this ensures any previous event listeners are cleared)
+      var old_canvas = document.getElementById("myCanvas");
+      var canvas = old_canvas.cloneNode(true);
+      old_canvas.parentNode.replaceChild(canvas,old_canvas);
+      // Configure canvas
+      canvas.width = (width*24);
+      canvas.height = (height*24);
+      // Remove old event listener
+      // Pass on state
+      main$main(width,height,bombs,document,canvas,
+		[
+		    document.getElementById("bomb"),
+		    document.getElementById("hidden"),
+		    document.getElementById("flagged"),
+		    document.getElementById("exposed"),
+		    document.getElementById("blank"),
+		    document.getElementById("one"),
+		    document.getElementById("two"),
+		    document.getElementById("three"),
+		    document.getElementById("four"),
+		    document.getElementById("five"),
+		    document.getElementById("six"),
+		    document.getElementById("seven"),
+		    document.getElementById("eight")
+		]
+	       );      
+  }
+  
+  window.onload = function() { run(16,16,40); }
 </script>
 </body>
 </html>

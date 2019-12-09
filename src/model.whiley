@@ -1,5 +1,5 @@
 import std::math with min,max
-import nat from std::integer
+import uint from std::integer
 
 // =================================================================
 // Squares
@@ -8,7 +8,7 @@ import nat from std::integer
 // An exposed square is one which has been exposed by the player, and 
 // displays its "rank".  The rank is the count of bombs in the eight 
 // directly adjacent squares.
-type ExposedSquare is {
+public type ExposedSquare is {
     bool holdsBomb,
     int rank
 } where rank >= 0 && rank <= 8
@@ -16,37 +16,37 @@ type ExposedSquare is {
 // A hidden square is one which has yet to be revealed by the player.  A
 // hidden square may contain a bomb and/or have been "flagged" by the
 // player.
-type HiddenSquare is {
+public type HiddenSquare is {
     bool holdsBomb,
     bool flagged
 }
 
 // Every square on the board is either an exposed square or a hidden
 // square.
-type Square is ExposedSquare | HiddenSquare
+public type Square is ExposedSquare | HiddenSquare
 
 // ExposedSquare constructor
-export function ExposedSquare(nat rank, bool bomb) -> ExposedSquare
+public export function ExposedSquare(uint rank, bool bomb) -> ExposedSquare
 requires rank <= 8:
     return { rank: rank, holdsBomb: bomb }
 
 // HiddenSquare constructor
-export function HiddenSquare(bool bomb, bool flag) -> HiddenSquare:
+public export function HiddenSquare(bool bomb, bool flag) -> HiddenSquare:
     return { holdsBomb: bomb, flagged: flag }
 
 // =================================================================
 // Board
 // =================================================================
 
-type Board is {
+public type Board is {
    Square[] squares,  // Array of squares making up the board
-   nat width,         // Width of the game board (in squares)
-   nat height         // Height of the game board (in squares)
+   uint width,         // Width of the game board (in squares)
+   uint height         // Height of the game board (in squares)
 } where width*height == |squares|
 
 // Create a board of given dimensions which contains no bombs, and
 // where all squares are hidden.
-export function Board(nat width, nat height) -> Board:
+public export function Board(uint width, uint height) -> Board:
     assume width*height >= 0
     Square[] squares = [HiddenSquare(false,false); width * height]
     //
@@ -57,7 +57,8 @@ export function Board(nat width, nat height) -> Board:
     }
 
 // Return the square on a given board at a given position
-export function getSquare(Board b, nat col, nat row) -> Square
+export function get_square(Board b, uint col, uint row) -> Square
+// Ensure arguments within bounds
 requires col < b.width && row < b.height:
     int rowOffset = b.width * row // calculate start of row
     assume rowOffset >= 0
@@ -65,7 +66,8 @@ requires col < b.width && row < b.height:
     return b.squares[rowOffset + col]
 
 // Set the square on a given board at a given position
-export function setSquare(Board b, nat col, nat row, Square sq) -> Board
+export function set_square(Board b, uint col, uint row, Square sq) -> Board
+// Ensure arguments within bounds
 requires col < b.width && row < b.height:
     int rowOffset = b.width * row // calculate start of row
     assume rowOffset >= 0
@@ -77,17 +79,17 @@ requires col < b.width && row < b.height:
 // Game Play
 // =================================================================
 
-export
+public export
 // Flag (or unflag) a given square on the board.  If this operation is not permitted, then do nothing
 // and return the board; otherwise, update the board accordingly.
-function flagSquare(Board b, nat col, nat row) -> Board
+function flag_square(Board b, uint col, uint row) -> Board
 requires col < b.width && row < b.height:
-   Square sq = getSquare(b,col,row)
+   Square sq = get_square(b,col,row)
    // check whether permitted to flag
    if sq is HiddenSquare:
       // yes, is permitted so reverse flag status and update board
       sq.flagged = !sq.flagged
-      b = setSquare(b,col,row,sq)
+      b = set_square(b,col,row,sq)
    //
    return b
 
@@ -96,41 +98,41 @@ requires col < b.width && row < b.height:
 // implementation, we also count any bomb on the central square itself.
 // This does not course any specific problem since an exposed square
 // containing a bomb signals the end of the game anyway.
-function determineRank(Board b, nat col, nat row) -> int
+function determineRank(Board b, uint col, uint row) -> int
 requires col < b.width && row < b.height:
     int rank = 0
     // Calculate the rank
     for r in max(0,row-1) .. min(b.height,row+2):
         for c in max(0,col-1) .. min(b.width,col+2):
-            Square sq = getSquare(b,c,r)
-            if holdsBomb(sq):
+            Square sq = get_square(b,c,r)
+            if holds_bomb(sq):
                 rank = rank + 1
     //
     return rank
 
 export
 // Attempt to recursively expose blank hidden square, starting from a given position.
-function exposeSquare(Board b, nat col, nat row) -> Board
+function expose_square(Board b, uint col, uint row) -> Board
 requires col < b.width && row < b.height:
     // Check whether is blank hidden square
-    Square sq = getSquare(b,col,row)
+    Square sq = get_square(b,col,row)
     int rank = determineRank(b,col,row)
     if sq is HiddenSquare && !sq.flagged:
         // yes, so expose square
         sq = ExposedSquare(rank,sq.holdsBomb)
-        b = setSquare(b,col,row,sq)
+        b = set_square(b,col,row,sq)
         if rank == 0:
             // now expose neighbours
-            return exposeNeighbours(b,col,row)
+            return expose_neighbours(b,col,row)
     //
     return b
 
 // Recursively expose all valid neighbouring squares on the board
-function exposeNeighbours(Board b, nat col, nat row) -> Board
+function expose_neighbours(Board b, uint col, uint row) -> Board
 requires col < b.width && row < b.height:
     for r in max(0,row-1) .. min(b.height,row+2):
         for c in max(0,col-1) .. min(b.width,col+2):
-           b = exposeSquare(b,c,r)
+           b = expose_square(b,c,r)
     //
     return b
 
@@ -139,8 +141,8 @@ requires col < b.width && row < b.height:
 // if there is an exposed square on the board which contains a bomb.  
 // Likewise, the game is over and the player has one if there are no 
 // hidden squares which don't contain a bomb.
-export
-function isGameOver(Board b) -> (bool gameOver, bool playerWon):
+public export
+function is_gameover(Board b) -> (bool gameOver, bool playerWon):
     bool isOver = true
     bool hasWon = true
     // Check all squares are hidden except mines
@@ -158,7 +160,7 @@ function isGameOver(Board b) -> (bool gameOver, bool playerWon):
     return isOver, hasWon
 
 // This method shouldn't really be necessary but, for now, it is.
-function holdsBomb(Square sq) -> bool:
+function holds_bomb(Square sq) -> bool:
     if sq is ExposedSquare:
         return sq.holdsBomb
     else:
