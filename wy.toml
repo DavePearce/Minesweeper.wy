@@ -19,4 +19,4 @@ length=3
 depth=1
 
 [dependencies]
-std="0.2.19"
+js="0.1.4"

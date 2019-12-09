@@ -1,0 +1,31 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html> <head>
+<title></title>
+<script type="text/javascript" src="assets/view.js"></script>
+<script type="text/javascript" src="bin/js/std.js"></script>
+<script type="text/javascript" src="bin/js/js.js"></script>
+<script type="text/javascript" src="bin/js/minesweeper.js"></script>
+</head>
+
+<body bgcolor="#ffffff">
+<h1>Minesweeper (in Whiley)</h1>
+<center>
+<canvas id="myCanvas" tabindex="1" width="300" height="300"></canvas>
+</center>
+<center><p>
+<i>(use shift-click to flag squares)</i>
+</p></center>
+<h2>Images</h2>
+<img id="blank" src="assets/images/ExposedBlankSquare.png"/>
+<img id="bomb" src="assets/images/ExposedBombSquare.png"/>
+<img id="hidden" src="assets/images/HiddenSquare.png"/>
+<img id="flagged" src="assets/images/HiddenSquareFlagged.png"/>
+<img id="one" src="assets/images/ExposedSquare1.png"/>
+<img id="two" src="assets/images/ExposedSquare2.png"/>
+<img id="three" src="assets/images/ExposedSquare3.png"/>
+<img id="four" src="assets/images/ExposedSquare4.png"/>
+<script>
+window.onload = function() { startGame(document); }
+</script>
+</body>
+</html>

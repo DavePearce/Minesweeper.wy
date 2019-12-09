@@ -1,3 +1,42 @@
+'use strict';
+function js$date$day$type(x) {
+   return (x >= 0) && (x <= 6);
+}
+function js$date$month$type(x) {
+   return (x >= 1) && (x <= 31);
+}
+function js$JSON$parse(str) {
+    return JSON.parse(str);
+}
+
+function js$JSON$stringify(item) {
+    return JSON.stringify(item);
+}
+function js$date$now() {
+    return Date.now();
+}
+
+function js$date$Date(ms) {
+    return new Date(ms);
+}
+function js$math$abs(x) {
+    return Math.abs(x);
+}
+
+function js$math$sin(degrees,magnitude) {
+    var radians = (degrees * Math.PI) / 180;
+    return Math.floor(Math.sin(radians) * magnitude);
+}
+
+function js$math$cos(degrees,magnitude) {
+    var radians = (degrees * Math.PI) / 180;
+    return Math.floor(Math.cos(radians) * magnitude);
+}
+
+function js$math$random(magnitude) {
+    // Generate random integer between 0 and magnitude.
+    return Math.floor(Math.random() * magnitude);
+}
 /**
  * The module Wy contains various runtime support functions necessary
  * for implementing the Whiley language in JavaScript.
@@ -49,8 +88,8 @@ Wy.copy = function(obj) {
     } else if(obj.constructor == Wy.Record) {
 	// Clone whiley records by recursively (i.e. deep) cloning
 	// all fields.
-	var r = {};
-	for(p in obj) {
+	var r = new Wy.Record({});
+	for(var p in obj) {
 	    r[p] = Wy.copy(obj[p]);
 	}
 	return r;
@@ -118,56 +157,31 @@ Wy.Ref = function(x) {
     this.$ref = x;
 };
 
-/**
- * Embed HTML generated from Whiley into a DOM node.  In principle,
- * this should perform a diff against the original node (though it
- * currently does not).
- */
-Wy.embed = function(node,contents) {
-    // Check whether we have a leaf which corresponds to a text node.
-    // This is an array because strings are represented as arrays in
-    // Whiley.
-    if(contents.constructor === Array) {
-	var text = Wy.fromString(contents);
-	var child = document.createTextNode(text);
-	node.appendChild(child);
-    } else {
-	// Create new node
-	var name = Wy.fromString(contents.name);
-	var child = document.createElement(name);
-	node.appendChild(child);
-	// Set attributes
-	var attributes = contents.attributes;
-	for(var i=0;i!=attributes.length;i=i+1) {
-	    if(attributes[i].key) {
-		// A text attribute
-		var key = Wy.fromString(attributes[i].key);		
-		var value = Wy.fromString(attributes[i].value);
-		child.setAttribute(key,value);
-	    } else {
-		// An event attribute
-		var event = Wy.fromString(attributes[i].event);
-		var handler = attributes[i].handler;
-		child.addEventListener(event,handler);
-	    }
-	}
-	// Embed children
-	var children = contents.children;
-	for(var i=0;i!=children.length;i=i+1) {
-	    Wy.embed(child,children[i]);
-	}
-    }
-}
+// THIS SHOULD BE DEPRECATED!
+Wy.toString = function(jsString) {
+    return js$util$to_string(jsString);
+};
 
 /**
  * Convert a Whiley string into a JavaScript string.  This is done by
  * converting each character code in the array into a JavaScript
  * string character.
  */
-Wy.fromString = function(whileyString) {
+function js$util$from_string(whileyString) {
     var result = "";
     for (var i = 0; i < whileyString.length; i++) {
 	result += String.fromCharCode(whileyString[i]);
+    }
+    return result;
+}
+
+/**
+ * Convert a JavaScript string into a Whiley string.  
+ */
+function js$util$to_string(jsString) {
+    var result = [];
+    for (var i = 0; i < jsString.length; i++) {
+	result.push(jsString.charCodeAt(i));
     }
     return result;
 }
