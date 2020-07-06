@@ -1,4 +1,18 @@
 'use strict';
+const js$core$MAX_SAFE_INTEGER$static = 9007199254740991;
+const js$core$MIN_SAFE_INTEGER$static = -9007199254740991;
+function js$core$string$type($) {
+   return true;
+}
+function js$core$integer$type(x) {
+   return (js$core$MIN_SAFE_INTEGER$static <= x) && (x <= js$core$MAX_SAFE_INTEGER$static);
+}
+function js$core$uinteger$type(x) {
+   return (0 <= x) && (x <= js$core$MAX_SAFE_INTEGER$static);
+}
+function js$core$number$type(x) {
+   return true;
+}
 function js$date$day$type(x) {
    return (x >= 0) && (x <= 6);
 }
@@ -12,6 +26,26 @@ function js$JSON$parse(str) {
 function js$JSON$stringify(item) {
     return JSON.stringify(item);
 }
+function js$core$append$Q6stringQ6string$Q6string(lhs, rhs) {
+    return lhs + rhs;
+}
+
+function js$core$append$Q6stringQ3intQ6string(lhs, rhs) {
+    return lhs + rhs;
+}
+
+function js$core$append$Q3intQ6numberQ6string(lhs, rhs) {
+    return lhs + rhs;
+}
+
+
+function js$core$append$Q6stringQ6number$Q6string(lhs, rhs) {
+    return lhs + rhs;
+}
+
+function js$core$append$Q6numberQ6string$Q6string(lhs, rhs) {
+    return lhs + rhs;
+}
 function js$date$now() {
     return Date.now();
 }
@@ -23,14 +57,16 @@ function js$math$abs(x) {
     return Math.abs(x);
 }
 
-function js$math$sin(degrees,magnitude) {
-    var radians = (degrees * Math.PI) / 180;
-    return Math.floor(Math.sin(radians) * magnitude);
+function js$math$sin(radians) {
+    return Math.sin(radians)
 }
 
-function js$math$cos(degrees,magnitude) {
-    var radians = (degrees * Math.PI) / 180;
-    return Math.floor(Math.cos(radians) * magnitude);
+function js$math$cos(radians) {
+    return Math.sin(radians)    
+}
+
+function js$math$to_degrees(radians) {
+    return (radians * Math.PI) / 180;
 }
 
 function js$math$random(magnitude) {
@@ -104,41 +140,67 @@ Wy.copy = function(obj) {
  * Provide a generic equality method for objects.
  */
 Wy.equals = function(o1, o2) {
-    if(o1 == o2) {
+    if(o1 === o2) {
 	return true;
-    } else if(o1 == null || "object" != typeof o1) {
-	// o1 is null or primitive.  In this case, we don't need
-	// to recursively look at members to determine equality.
+    } else if(o1 == null || o2 == null) {
+	// One is null, and other is not
 	return false;
-    } else if(o2 == null || "object" != typeof o2) {
-	// o2 is null or primitive.  In this case, we don't need
-	// to recursively look at members to determine equality.
+    } else if((typeof o1) == "object" || (typeof o2) == "object") {
+	if((typeof o1) == "string") {
+	    return Wy.strObjEquals(o1,o2);
+	} else if((typeof o2) == "string") {
+	    return Wy.strObjEquals(o2,o1);
+	} else {
+	    return Wy.objObjEquals(o1,o2);
+	}
+    } else {
+	// Primitive types cannot be equal.
 	return false;
-    } else if(typeof o1 != typeof o2) {
-	// perhaps comparing an array with a record or similar
+    }
+};
+
+/**
+ * Check whether a string and an object are equal, assuming neither is
+ * null.
+ */
+Wy.strObjEquals = function(s1,o2){
+    if(s1.length != o2.length) {
 	return false;
     } else {
-	var o1Fields = Object.getOwnPropertyNames(o1);
-	var o2Fields = Object.getOwnPropertyNames(o2);
-	// Check whether same number of fields
-	if (o1Fields.length != o2Fields.length) {
-	    // No, different numbers of fields
-	    return false;
-	} else {
-	    // Now, compare fields
-	    for (var i = 0; i < o1Fields.length; i++) {
-		var field = o1Fields[i];
-		//
-		if (!Wy.equals(o1[field],o2[field])) {
-		    // Values for this field not equal, hence
-		    // entire recordnot equal.
-		    return false;
-		}
+	for (var i = 0; i < s1.length; i++) {
+	    if (s1.charCodeAt(i) != o2[i]) {	
+		return false;
 	    }
 	}
-	// Done
-	return true;
+	return true;	    
     }
+};
+
+/**
+ * Check whether two objects (e.g. arrays or records) are equal,
+ * assuming neither is null.
+ */
+Wy.objObjEquals = function(o1,o2) {
+    var o1Fields = Object.getOwnPropertyNames(o1);
+    var o2Fields = Object.getOwnPropertyNames(o2);
+    // Check whether same number of fields
+    if (o1Fields.length != o2Fields.length) {
+	// No, different numbers of fields
+	return false;
+    } else {
+	// Now, compare fields
+	for (var i = 0; i < o1Fields.length; i++) {
+	    var field = o1Fields[i];
+	    //
+	    if (!Wy.equals(o1[field],o2[field])) {
+		// Values for this field not equal, hence
+		// entire recordnot equal.
+		return false;
+	    }
+	}
+    }
+    // Done
+    return true;
 };
 
 /**
@@ -157,17 +219,12 @@ Wy.Ref = function(x) {
     this.$ref = x;
 };
 
-// THIS SHOULD BE DEPRECATED!
-Wy.toString = function(jsString) {
-    return js$util$to_string(jsString);
-};
-
 /**
  * Convert a Whiley string into a JavaScript string.  This is done by
  * converting each character code in the array into a JavaScript
  * string character.
  */
-function js$util$from_string(whileyString) {
+Wy.fromString = function(whileyString) {
     var result = "";
     for (var i = 0; i < whileyString.length; i++) {
 	result += String.fromCharCode(whileyString[i]);
@@ -178,7 +235,7 @@ function js$util$from_string(whileyString) {
 /**
  * Convert a JavaScript string into a Whiley string.  
  */
-function js$util$to_string(jsString) {
+Wy.toString = function(jsString) {
     var result = [];
     for (var i = 0; i < jsString.length; i++) {
 	result.push(jsString.charCodeAt(i));

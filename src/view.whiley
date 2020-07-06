@@ -1,5 +1,4 @@
 import uint from std::integer
-import from_string from js::util
 import Document,CanvasRenderingContext2D from w3c::dom
 import HTMLCanvasElement, HTMLImageElement from w3c::dom
 
@@ -27,7 +26,7 @@ public type State is {
 public method init(Document document, HTMLCanvasElement canvas, Board board, HTMLImageElement[] images) -> State
 requires |images| == 13:
     // Access canvas context
-    CanvasRenderingContext2D ctx = canvas->getContext(from_string("2d"))
+    CanvasRenderingContext2D ctx = canvas->getContext("2d")
     //
     return {
         images: images,
@@ -70,4 +69,4 @@ public method draw_board(State state):
     for x in 0..state.board.width:
         for y in 0..state.board.height:
             // Render square
-            draw_square(state,x,y)
+            draw_square(state,(uint) x, (uint) y)
