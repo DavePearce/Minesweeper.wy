@@ -1,5 +1,5 @@
 import uint from std::integer
-import from_string from js::util
+import uinteger from js::core
 import random from js::math
 import alert from w3c::dom
 import Document, CanvasRenderingContext2D from w3c::dom
@@ -12,7 +12,7 @@ import view
  * Add a given number of bombs to the board.
  */
 method add_random_bombs(model::Board board, uint n) -> model::Board:
-    int remaining = |board.squares|   
+    uinteger remaining = |board.squares|   
     // Use Knuth's algorithm S
     for x in 0..board.width:
         for y in 0..board.height:
@@ -21,7 +21,7 @@ method add_random_bombs(model::Board board, uint n) -> model::Board:
                 // create bomb square
                 model::Square s = model::HiddenSquare(true,false)
                 // Update board
-                board = model::set_square(board,x,y,s)
+                board = model::set_square(board,(uint) x, (uint) y,s)
                 // Reduce number of bombs to place
                 n = n - 1
             // Reduce remaining options
@@ -34,8 +34,8 @@ method add_random_bombs(model::Board board, uint n) -> model::Board:
  */
 method onclick_handler(MouseEvent e, &view::State state):
     // Convert from view to world coordinates
-    int x = e->offsetX / state->gridsize
-    int y = e->offsetY / state->gridsize
+    uint x = e->offsetX / state->gridsize
+    uint y = e->offsetY / state->gridsize
     // Update board
     if e->shiftKey:
         state->board = model::flag_square(state->board,x,y)
@@ -57,11 +57,11 @@ method onclick_handler(MouseEvent e, &view::State state):
 /**
  * Create a new game of Minesweeper
  */
-public export method main(int width, int height, int bombs, Document document, HTMLCanvasElement canvas, HTMLImageElement[] images)
+public export method main(uint width, uint height, uint bombs, Document document, HTMLCanvasElement canvas, HTMLImageElement[] images)
 // Requires at least 9 images
 requires |images| == 13:
     // NOTE: following should not be required!
-    Element c = document->getElementById(from_string("myCanvas"))
+    Element c = document->getElementById("myCanvas")
     // Create a standard sized board
     model::Board board = model::Board(width,height)
     // Add bombs
@@ -71,5 +71,5 @@ requires |images| == 13:
     // Render initial board
     view::draw_board(*state)
     // Configure mouse click listener
-    c->addEventListener(from_string("click"),&(MouseEvent e -> onclick_handler(e,state)))
+    c->addEventListener("click",&(MouseEvent e -> onclick_handler(e,state)))
     

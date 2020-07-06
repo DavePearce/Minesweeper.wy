@@ -1,5 +1,5 @@
 'use strict';
-function main$add_random_bombs$Q5model5BoardQ4uint(board, n) {
+function main$add_random_bombs$Q5model5BoardQ4uint$Q5model5Board(board, n) {
    let remaining = board.squares.length;
    for(let x = 0;x < board.width;x = x + 1) {
       for(let y = 0;y < board.height;y = y + 1) {
@@ -22,7 +22,7 @@ function main$add_random_bombs$Q5model5BoardQ4uint(board, n) {
    }
    return Wy.copy(board);
 }
-function main$onclick_handler$Q10MouseEventqQ4view5State(e, state) {
+function main$onclick_handler$Q10MouseEventqQ4view5State$V(e, state) {
    let x = Math.floor(e.offsetX / state.$ref.gridsize);
    let y = Math.floor(e.offsetY / state.$ref.gridsize);
    if(e.shiftKey)  {
@@ -36,28 +36,28 @@ function main$onclick_handler$Q10MouseEventqQ4view5State(e, state) {
          state.$ref.board = $4;
       }
    }
-   view$draw_board$Q5State(state.$ref);
+   view$draw_board$Q5State$V(state.$ref);
    let [gameOver, winner] = model$is_gameover(state.$ref.board);
    if(gameOver)  {
       if(winner)  {
-         w3c$dom$alert(Wy.toString("Well done --- You Found all the Mines!"));
+         w3c$dom$alert("Well done --- You Found all the Mines!");
       } else  {
-         w3c$dom$alert(Wy.toString("Game Over --- You Lost!"));
+         w3c$dom$alert("Game Over --- You Lost!");
       }
    }
 }
 function main$main(width, height, bombs, document, canvas, images) {
-   let c = document.getElementById(js$util$from_string(Wy.toString("myCanvas")));
+   let c = document.getElementById("myCanvas");
    let board = model$Board(width, height);
     {
-      const $5 = main$add_random_bombs$Q5model5BoardQ4uint(Wy.copy(board), bombs);
+      const $5 = main$add_random_bombs$Q5model5BoardQ4uint$Q5model5Board(Wy.copy(board), bombs);
       board = $5;
    }
-   let state = new Wy.Ref(view$init$Q8DocumentQ17HTMLCanvasElementQ5BoardaQ16HTMLImageElement(document, canvas, Wy.copy(board), Wy.copy(images)));
-   view$draw_board$Q5State(state.$ref);
-   c.addEventListener(js$util$from_string(Wy.toString("click")), function(state) {
+   let state = new Wy.Ref(view$init$Q8DocumentQ17HTMLCanvasElementQ5BoardaQ16HTMLImageElement$Q5State(document, canvas, Wy.copy(board), Wy.copy(images)));
+   view$draw_board$Q5State$V(state.$ref);
+   c.addEventListener("click", function(state) {
       return function(e) {
-         return main$onclick_handler$Q10MouseEventqQ4view5State(e, state);
+         return main$onclick_handler$Q10MouseEventqQ4view5State$V(e, state);
       };
    }(state));
 }
@@ -105,12 +105,12 @@ function model$flag_square(b, col, row) {
    }
    return Wy.copy(b);
 }
-function model$determineRank$Q5BoardQ4uintQ4uint(b, col, row) {
+function model$determineRank$Q5BoardQ4uintQ4uint$Q4uint(b, col, row) {
    let rank = 0;
-   for(let r = std$math$max$II(0, row - 1);r < std$math$min$II(b.height, row + 2);r = r + 1) {
-      for(let c = std$math$max$II(0, col - 1);c < std$math$min$II(b.width, col + 2);c = c + 1) {
+   for(let r = std$math$max$II$I(0, row - 1);r < std$math$min$II$I(b.height, row + 2);r = r + 1) {
+      for(let c = std$math$max$II$I(0, col - 1);c < std$math$min$II$I(b.width, col + 2);c = c + 1) {
          let sq = model$get_square(Wy.copy(b), c, r);
-         if(model$holds_bomb$Q6Square(Wy.copy(sq)))  {
+         if(model$holds_bomb$Q6Square$B(Wy.copy(sq)))  {
              {
                const $8 = rank + 1;
                rank = $8;
@@ -122,7 +122,7 @@ function model$determineRank$Q5BoardQ4uintQ4uint(b, col, row) {
 }
 function model$expose_square(b, col, row) {
    let sq = model$get_square(Wy.copy(b), col, row);
-   let rank = model$determineRank$Q5BoardQ4uintQ4uint(Wy.copy(b), col, row);
+   let rank = model$determineRank$Q5BoardQ4uintQ4uint$Q4uint(Wy.copy(b), col, row);
    if(is$Q6Squarer2B9holdsBombB7flagged(sq) && (!sq.flagged))  {
        {
          const $9 = model$ExposedSquare(rank, sq.holdsBomb);
@@ -133,14 +133,14 @@ function model$expose_square(b, col, row) {
          b = $10;
       }
       if(rank === 0)  {
-         return model$expose_neighbours$Q5BoardQ4uintQ4uint(Wy.copy(b), col, row);
+         return model$expose_neighbours$Q5BoardQ4uintQ4uint$Q5Board(Wy.copy(b), col, row);
       }
    }
    return Wy.copy(b);
 }
-function model$expose_neighbours$Q5BoardQ4uintQ4uint(b, col, row) {
-   for(let r = std$math$max$II(0, row - 1);r < std$math$min$II(b.height, row + 2);r = r + 1) {
-      for(let c = std$math$max$II(0, col - 1);c < std$math$min$II(b.width, col + 2);c = c + 1) {
+function model$expose_neighbours$Q5BoardQ4uintQ4uint$Q5Board(b, col, row) {
+   for(let r = std$math$max$II$I(0, row - 1);r < std$math$min$II$I(b.height, row + 2);r = r + 1) {
+      for(let c = std$math$max$II$I(0, col - 1);c < std$math$min$II$I(b.width, col + 2);c = c + 1) {
           {
             const $11 = model$expose_square(Wy.copy(b), c, r);
             b = $11;
@@ -168,7 +168,7 @@ function model$is_gameover(b) {
    }
    return [isOver, hasWon];
 }
-function model$holds_bomb$Q6Square(sq) {
+function model$holds_bomb$Q6Square$B(sq) {
    if(is$Q6SquareQ13ExposedSquare(sq))  {
       return sq.holdsBomb;
    } else  {
@@ -183,11 +183,11 @@ const view$BLANK$static = 4;
 function view$State$type($) {
    return $.images.length === 13;
 }
-function view$init$Q8DocumentQ17HTMLCanvasElementQ5BoardaQ16HTMLImageElement(document, canvas, board, images) {
-   let ctx = canvas.getContext(js$util$from_string(Wy.toString("2d")));
+function view$init$Q8DocumentQ17HTMLCanvasElementQ5BoardaQ16HTMLImageElement$Q5State(document, canvas, board, images) {
+   let ctx = canvas.getContext("2d");
    return new Wy.Record({images: Wy.copy(images), ctx: ctx, board: Wy.copy(board), gridsize: 24});
 }
-function view$determine_image$Q5StateQ6Square(state, square) {
+function view$determine_image$Q5StateQ6Square$Q16HTMLImageElement(state, square) {
    if(is$Q6Squarer2B9holdsBombB7flagged(square))  {
       if(square.flagged)  {
          return state.images[view$FLAGGED$static];
@@ -202,7 +202,7 @@ function view$determine_image$Q5StateQ6Square(state, square) {
       }
    }
 }
-function view$draw_square$Q5StateQ4uintQ4uint(state, x, y) {
+function view$draw_square$Q5StateQ4uintQ4uint$V(state, x, y) {
    let square = model$get_square(Wy.copy(state.board), x, y);
     {
       const $12 = x * state.gridsize;
@@ -210,15 +210,21 @@ function view$draw_square$Q5StateQ4uintQ4uint(state, x, y) {
       x = $12;
       y = $13;
    }
-   let img = view$determine_image$Q5StateQ6Square(Wy.copy(state), Wy.copy(square));
+   let img = view$determine_image$Q5StateQ6Square$Q16HTMLImageElement(Wy.copy(state), Wy.copy(square));
    state.ctx.drawImage(img, x, y);
 }
-function view$draw_board$Q5State(state) {
+function view$draw_board$Q5State$V(state) {
    for(let x = 0;x < state.board.width;x = x + 1) {
       for(let y = 0;y < state.board.height;y = y + 1) {
-         view$draw_square$Q5StateQ4uintQ4uint(Wy.copy(state), x, y);
+         view$draw_square$Q5StateQ4uintQ4uint$V(Wy.copy(state), x, y);
       }
    }
+}
+function is$u2Q13ExposedSquareQ12HiddenSquareQ13ExposedSquare(v) {
+   return is$u2Q13ExposedSquareQ12HiddenSquarer2B9holdsBombI4rank(v) && model$ExposedSquare$type(v);
+}
+function is$Q6SquareQ13ExposedSquare(v) {
+   return is$Q6Squarer2B9holdsBombI4rank(v) && model$ExposedSquare$type(v);
 }
 function is$Q6Squarer2B9holdsBombB7flagged(v) {
    if(((typeof v.holdsBomb) === "undefined") || ((typeof v.holdsBomb) !== "boolean"))  {
@@ -227,12 +233,6 @@ function is$Q6Squarer2B9holdsBombB7flagged(v) {
       return false;
    }
    return true;
-}
-function is$u2Q13ExposedSquareQ12HiddenSquareQ13ExposedSquare(v) {
-   return is$u2Q13ExposedSquareQ12HiddenSquarer2B9holdsBombI4rank(v) && model$ExposedSquare$type(v);
-}
-function is$Q6SquareQ13ExposedSquare(v) {
-   return is$Q6Squarer2B9holdsBombI4rank(v) && model$ExposedSquare$type(v);
 }
 function is$u2Q13ExposedSquareQ12HiddenSquarer2B9holdsBombI4rank(v) {
    if(((typeof v.holdsBomb) === "undefined") || ((typeof v.holdsBomb) !== "boolean"))  {

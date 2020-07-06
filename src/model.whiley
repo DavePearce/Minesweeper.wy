@@ -98,13 +98,13 @@ requires col < b.width && row < b.height:
 // implementation, we also count any bomb on the central square itself.
 // This does not course any specific problem since an exposed square
 // containing a bomb signals the end of the game anyway.
-function determineRank(Board b, uint col, uint row) -> int
+function determineRank(Board b, uint col, uint row) -> uint
 requires col < b.width && row < b.height:
-    int rank = 0
+    uint rank = 0
     // Calculate the rank
     for r in max(0,row-1) .. min(b.height,row+2):
         for c in max(0,col-1) .. min(b.width,col+2):
-            Square sq = get_square(b,c,r)
+            Square sq = get_square(b,(uint) c, (uint) r)
             if holds_bomb(sq):
                 rank = rank + 1
     //
@@ -116,7 +116,7 @@ function expose_square(Board b, uint col, uint row) -> Board
 requires col < b.width && row < b.height:
     // Check whether is blank hidden square
     Square sq = get_square(b,col,row)
-    int rank = determineRank(b,col,row)
+    uint rank = determineRank(b,col,row)
     if sq is HiddenSquare && !sq.flagged:
         // yes, so expose square
         sq = ExposedSquare(rank,sq.holdsBomb)
@@ -132,7 +132,7 @@ function expose_neighbours(Board b, uint col, uint row) -> Board
 requires col < b.width && row < b.height:
     for r in max(0,row-1) .. min(b.height,row+2):
         for c in max(0,col-1) .. min(b.width,col+2):
-           b = expose_square(b,c,r)
+           b = expose_square(b,(uint) c, (uint) r)
     //
     return b
 
