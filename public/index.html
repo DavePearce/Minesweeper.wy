@@ -1,10 +1,10 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <html> <head>
 <title></title>
-<script type="text/javascript" src="bin/js/std.js"></script>
-<script type="text/javascript" src="bin/js/js.js"></script>
-<script type="text/javascript" src="bin/js/dom.js"></script>
-<script type="text/javascript" src="bin/js/minesweeper.js"></script>
+<script type="text/javascript" src="js/std.js"></script>
+<script type="text/javascript" src="js/js.js"></script>
+<script type="text/javascript" src="js/dom.js"></script>
+<script type="text/javascript" src="js/minesweeper.js"></script>
 </head>
 
 <body bgcolor="#ffffff">
@@ -22,18 +22,18 @@
 <center><p>
 <i>(use shift-click to flag squares)</i>
 </p></center>
-<img id="blank" style="display:none" src="assets/images/ExposedBlankSquare.png"/>
-<img id="bomb" style="display:none" src="assets/images/ExposedBombSquare.png"/>
-<img id="hidden" style="display:none" src="assets/images/HiddenSquare.png"/>
-<img id="flagged" style="display:none" src="assets/images/HiddenSquareFlagged.png"/>
-<img id="one" style="display:none" src="assets/images/ExposedSquare1.png"/>
-<img id="two" style="display:none" src="assets/images/ExposedSquare2.png"/>
-<img id="three" style="display:none" src="assets/images/ExposedSquare3.png"/>
-<img id="four" style="display:none" src="assets/images/ExposedSquare4.png"/>
-<img id="five" style="display:none" src="assets/images/ExposedSquare5.png"/>
-<img id="six" style="display:none" src="assets/images/ExposedSquare6.png"/>
-<img id="seven" style="display:none" src="assets/images/ExposedSquare7.png"/>
-<img id="eight" style="display:none" src="assets/images/ExposedSquare8.png"/>
+<img id="blank" style="display:none" src="images/ExposedBlankSquare.png"/>
+<img id="bomb" style="display:none" src="images/ExposedBombSquare.png"/>
+<img id="hidden" style="display:none" src="images/HiddenSquare.png"/>
+<img id="flagged" style="display:none" src="images/HiddenSquareFlagged.png"/>
+<img id="one" style="display:none" src="images/ExposedSquare1.png"/>
+<img id="two" style="display:none" src="images/ExposedSquare2.png"/>
+<img id="three" style="display:none" src="images/ExposedSquare3.png"/>
+<img id="four" style="display:none" src="images/ExposedSquare4.png"/>
+<img id="five" style="display:none" src="images/ExposedSquare5.png"/>
+<img id="six" style="display:none" src="images/ExposedSquare6.png"/>
+<img id="seven" style="display:none" src="images/ExposedSquare7.png"/>
+<img id="eight" style="display:none" src="images/ExposedSquare8.png"/>
 <script>
   function run(width,height,bombs) {
       // Clone canvas (this ensures any previous event listeners are cleared)

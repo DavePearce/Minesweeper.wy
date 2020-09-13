@@ -11,6 +11,7 @@ verify=false
 
 [build.js]
 standard="ES6"
+target="public/js"
 
 [check]
 min=-3
