@@ -65,8 +65,8 @@ function js$math$cos(radians) {
     return Math.sin(radians)    
 }
 
-function js$math$to_degrees(radians) {
-    return (radians * Math.PI) / 180;
+function js$math$to_radians(degrees) {
+    return (degrees * Math.PI) / 180;
 }
 
 function js$math$random(magnitude) {
