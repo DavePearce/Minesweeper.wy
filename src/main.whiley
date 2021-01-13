@@ -1,8 +1,7 @@
 import uint from std::integer
 import uinteger from js::core
 import random from js::math
-import alert from w3c::dom
-import Document, CanvasRenderingContext2D from w3c::dom
+import Document, Window, CanvasRenderingContext2D from w3c::dom
 import Element,HTMLCanvasElement, HTMLImageElement, MouseEvent from w3c::dom
 
 import model
@@ -32,7 +31,7 @@ method add_random_bombs(model::Board board, uint n) -> model::Board:
 /**
  * Handle a mouse event on the canvas
  */
-method onclick_handler(MouseEvent e, &view::State state):
+method onclick_handler(MouseEvent e, &view::State state, Window window):
     // Convert from view to world coordinates
     uint x = e->offsetX / state->gridsize
     uint y = e->offsetY / state->gridsize
@@ -49,17 +48,18 @@ method onclick_handler(MouseEvent e, &view::State state):
     if gameOver:
         // Yes, but win or lose?
         if winner:
-            alert("Well done --- You Found all the Mines!")
+            window->alert("Well done --- You Found all the Mines!")
         else:
-            alert("Game Over --- You Lost!")
+            window->alert("Game Over --- You Lost!")
     // Done
 
 /**
  * Create a new game of Minesweeper
  */
-public export method main(uint width, uint height, uint bombs, Document document, HTMLCanvasElement canvas, HTMLImageElement[] images)
+public export method main(uint width, uint height, uint bombs, Window window, HTMLCanvasElement canvas, HTMLImageElement[] images)
 // Requires at least 9 images
 requires |images| == 13:
+    Document document = window->document
     // NOTE: following should not be required!
     Element c = document->getElementById("myCanvas")
     // Create a standard sized board
@@ -71,5 +71,5 @@ requires |images| == 13:
     // Render initial board
     view::draw_board(*state)
     // Configure mouse click listener
-    c->addEventListener("click",&(MouseEvent e -> onclick_handler(e,state)))
+    c->addEventListener("click",&(MouseEvent e -> onclick_handler(e,state,window)))
     
