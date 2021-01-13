@@ -143,7 +143,7 @@ function std$array$replace_first$av1Tav1Tav1T$av1T(items, old, n) {
          return std$array$copy$av1TQ4uintav1TQ4uintQ4uint$av1T(Wy.copy(n), 0, Wy.copy(items), i, old.length);
       } else  {
          let size = (items.length - old.length) + n.length;
-         let nitems = std$array$resize$av1TI$av1T(Wy.copy(items), size);
+         let nitems = std$array$resize$av1TQ4uintv1T$av1T(Wy.copy(items), size, Wy.copy(old[0]));
           {
             const $3 = std$array$copy$av1TQ4uintav1TQ4uintQ4uint$av1T(Wy.copy(n), 0, Wy.copy(nitems), i, n.length);
             nitems = $3;
@@ -192,7 +192,7 @@ function std$array$append$av1Tav1T$av1T(lhs, rhs) {
    if(lhs.length === 0)  {
       return Wy.copy(rhs);
    } else  {
-      let rs = std$array$resize$av1TIv1T$av1T(Wy.copy(lhs), lhs.length + rhs.length, Wy.copy(lhs[0]));
+      let rs = std$array$resize$av1TQ4uintv1T$av1T(Wy.copy(lhs), lhs.length + rhs.length, Wy.copy(lhs[0]));
       return std$array$copy$av1TQ4uintav1TQ4uintQ4uint$av1T(Wy.copy(rhs), 0, Wy.copy(rs), lhs.length, rhs.length);
    }
 }
@@ -212,7 +212,7 @@ function std$array$append$v1Tav1T$av1T(item, items) {
    }
    return Wy.copy(nitems);
 }
-function std$array$resize$av1TI$av1T(src, size) {
+function std$array$resize$av1TQ4uint$av1T(src, size) {
    let result;
    if(src.length === 0)  {
       return Wy.copy(src);
@@ -224,7 +224,7 @@ function std$array$resize$av1TI$av1T(src, size) {
       return Wy.copy(result);
    }
 }
-function std$array$resize$av1TIv1T$av1T(items, size, item) {
+function std$array$resize$av1TQ4uintv1T$av1T(items, size, item) {
    let result;
    let nitems = Wy.array(item, size);
    let i = 0;
@@ -297,7 +297,7 @@ function std$array$filter$av1Tfv1TB$av1T(items, fn) {
          }
       }
    }
-   return std$array$resize$av1TI$av1T(Wy.copy(items), j);
+   return std$array$resize$av1TQ4uint$av1T(Wy.copy(items), j);
 }
 function std$array$foldl$av1Tv1Tf2v1Tv1Tv1T$v1T(items, dEfault, fn) {
    let r;
@@ -532,7 +532,8 @@ function std$collections$array_set$insert$Q8ArraySetv1T$Q8ArraySet(set, item) {
    }
 }
 function std$collections$hash$hash$I$Q3u32(x) {
-   return x % 4294967295;
+   let _x = x + 2147483648;
+   return _x % 4294967295;
 }
 function std$collections$hash$hash$B$Q3u32(b) {
    if(b)  {
@@ -563,9 +564,7 @@ function std$collections$hash$hash$aB$Q3u32(xs) {
 }
 function std$collections$hash_map$HashMap$V$Q7HashMap() {
    let r;
-   return std$collections$hash_map$HashMap$Q4hash2fn$Q7HashMap(function(p0) {
-      return std$collections$hash$hash$I$Q3u32(p0);
-   });
+   return std$collections$hash_map$HashMap$Q4hash2fn$Q7HashMap(std$collections$hash$hash$I$Q3u32);
 }
 function std$collections$hash_map$HashMap$Q4hash2fn$Q7HashMap(hasher) {
    let r;
@@ -594,7 +593,7 @@ function std$collections$hash_map$get$Q7HashMapv1S$Q6Option(map, key) {
          return std$option$Some$v1T$Q4Some(Wy.copy(ith.second));
       }
    }
-   return std$option$None$static;
+   return Wy.copy(std$option$None$static);
 }
 function std$collections$hash_map$insert$Q7HashMapv1Sv1T$Q7HashMap(map, key, value) {
    let r;
@@ -603,11 +602,11 @@ function std$collections$hash_map$insert$Q7HashMapv1Sv1T$Q7HashMap(map, key, val
    for(let i = 0;i < std$collections$vector$size$Q6Vector$I(Wy.copy(bucket));i = i + 1) {
       let ith = std$collections$vector$get$Q6VectorI$v1T(Wy.copy(bucket), i);
       if(Wy.equals(ith.first, key))  {
-         map.buckets[index] = std$collections$vector$set$Q6VectorIv1T$Q6Vector(Wy.copy(bucket), i, std$pair$Pair$v1Sv1T$Q4Pair(Wy.copy(key), Wy.copy(value)));
+         map.buckets[index] = std$collections$vector$set$Q6VectorIv1T$Q6Vector(Wy.copy(bucket), i, std$collections$pair$Pair$v1Sv1T$Q4Pair(Wy.copy(key), Wy.copy(value)));
          return Wy.copy(map);
       }
    }
-   map.buckets[index] = std$collections$vector$push$Q6Vectorv1T$Q6Vector(Wy.copy(bucket), std$pair$Pair$v1Sv1T$Q4Pair(Wy.copy(key), Wy.copy(value)));
+   map.buckets[index] = std$collections$vector$push$Q6Vectorv1T$Q6Vector(Wy.copy(bucket), std$collections$pair$Pair$v1Sv1T$Q4Pair(Wy.copy(key), Wy.copy(value)));
     {
       const $29 = map.length + 1;
       map.length = $29;
@@ -649,7 +648,7 @@ function std$collections$hash_map$get$Q7HashMapQ4uintQ4uint$Q6Option(map, bucket
    if(bucket < map.buckets.length)  {
       return std$option$Some$v1T$Q4Some(std$collections$vector$get$Q6VectorI$v1T(Wy.copy(map.buckets[bucket]), index));
    } else  {
-      return std$option$None$static;
+      return Wy.copy(std$option$None$static);
    }
 }
 function std$collections$hash_map$next$Q7HashMapQ4uintQ4uint$Q8Iterator(map, bucket, index) {
@@ -677,6 +676,23 @@ function std$collections$hash_map$advance$Q7HashMapQ4uintQ4uint$Q4uintQ4uint(map
    } else  {
       return [map.buckets.length, 0];
    }
+}
+function std$collections$pair$Pair$v1Sv1T$Q4Pair(first, second) {
+   let r;
+   return new Wy.Record({first: Wy.copy(first), second: Wy.copy(second)});
+}
+function std$collections$pair$swap$Q4Pair$Q4Pair(p) {
+   let r;
+   return new Wy.Record({first: Wy.copy(p.second), second: Wy.copy(p.first)});
+}
+function std$collections$pair$map$Q4Pairfv1Sv1T$Q4Pair(pair, fn) {
+   return new Wy.Record({first: fn(Wy.copy(pair.first)), second: fn(Wy.copy(pair.second))});
+}
+function std$collections$pair$map_1st$Q4Pairfv1Sv1U$Q4Pair(pair, fn) {
+   return new Wy.Record({first: fn(Wy.copy(pair.first)), second: Wy.copy(pair.second)});
+}
+function std$collections$pair$map_2nd$Q4Pairfv1Tv1U$Q4Pair(pair, fn) {
+   return new Wy.Record({first: Wy.copy(pair.first), second: fn(Wy.copy(pair.second))});
 }
 function std$collections$vector$Vector$type($) {
    return $.length <= $.items.length;
@@ -709,7 +725,7 @@ function std$collections$vector$push$Q6Vectorv1T$Q6Vector(vec, item) {
    if(vec.length === vec.items.length)  {
       let nlen = (vec.length * 2) + 1;
        {
-         const $31 = std$array$resize$av1TIv1T$av1T(Wy.copy(vec.items), nlen, Wy.copy(item));
+         const $31 = std$array$resize$av1TQ4uintv1T$av1T(Wy.copy(vec.items), nlen, Wy.copy(item));
          vec.items = $31;
       }
    } else  {
@@ -733,7 +749,7 @@ function std$collections$vector$push_all$Q6Vectorav1T$Q6Vector(vec, items) {
       if(len > vec.items.length)  {
          let nlen = (vec.length * 2) + items.length;
           {
-            const $34 = std$array$resize$av1TIv1T$av1T(Wy.copy(vec.items), nlen, Wy.copy(items[0]));
+            const $34 = std$array$resize$av1TQ4uintv1T$av1T(Wy.copy(vec.items), nlen, Wy.copy(items[0]));
             vec.items = $34;
          }
       }
@@ -1021,7 +1037,7 @@ function std$option$unwrap$Q6Optionv1T$v1T(option, dEfault) {
 function std$option$map$Q6Optionfv1Sv1T$Q6Option(option, fn) {
    let result;
    if(is$Q6OptionQ4None(option))  {
-      return std$option$None$static;
+      return Wy.copy(std$option$None$static);
    } else  {
       return std$option$Some$v1T$Q4Some(fn(Wy.copy(option.value)));
    }
@@ -1031,25 +1047,8 @@ function std$option$filter$Q6Optionfv1TB$Q6Option(option, filter) {
    if((!is$Q6OptionQ4None(option)) && filter(Wy.copy(option.value)))  {
       return Wy.copy(option);
    } else  {
-      return std$option$None$static;
+      return Wy.copy(std$option$None$static);
    }
-}
-function std$pair$Pair$v1Sv1T$Q4Pair(first, second) {
-   let r;
-   return new Wy.Record({first: Wy.copy(first), second: Wy.copy(second)});
-}
-function std$pair$swap$Q4Pair$Q4Pair(p) {
-   let r;
-   return new Wy.Record({first: Wy.copy(p.second), second: Wy.copy(p.first)});
-}
-function std$pair$map$Q4Pairfv1Sv1T$Q4Pair(pair, fn) {
-   return new Wy.Record({first: fn(Wy.copy(pair.first)), second: fn(Wy.copy(pair.second))});
-}
-function std$pair$map_1st$Q4Pairfv1Sv1U$Q4Pair(pair, fn) {
-   return new Wy.Record({first: fn(Wy.copy(pair.first)), second: Wy.copy(pair.second)});
-}
-function std$pair$map_2nd$Q4Pairfv1Tv1U$Q4Pair(pair, fn) {
-   return new Wy.Record({first: Wy.copy(pair.first), second: fn(Wy.copy(pair.second))});
 }
 function std$utf8$uint$type(x) {
    return x >= 0;

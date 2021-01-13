@@ -22,7 +22,7 @@ function main$add_random_bombs$Q5model5BoardQ4uint$Q5model5Board(board, n) {
    }
    return Wy.copy(board);
 }
-function main$onclick_handler$Q10MouseEventqQ4view5State$V(e, state) {
+function main$onclick_handler$Q10MouseEventqQ4view5StateQ6Window$V(e, state, window) {
    let x = Math.floor(e.offsetX / state.$ref.gridsize);
    let y = Math.floor(e.offsetY / state.$ref.gridsize);
    if(e.shiftKey)  {
@@ -40,13 +40,14 @@ function main$onclick_handler$Q10MouseEventqQ4view5State$V(e, state) {
    let [gameOver, winner] = model$is_gameover(state.$ref.board);
    if(gameOver)  {
       if(winner)  {
-         w3c$dom$alert("Well done --- You Found all the Mines!");
+         window.alert("Well done --- You Found all the Mines!");
       } else  {
-         w3c$dom$alert("Game Over --- You Lost!");
+         window.alert("Game Over --- You Lost!");
       }
    }
 }
-function main$main(width, height, bombs, document, canvas, images) {
+function main$main(width, height, bombs, window, canvas, images) {
+   let document = window.document;
    let c = document.getElementById("myCanvas");
    let board = model$Board(width, height);
     {
@@ -55,11 +56,11 @@ function main$main(width, height, bombs, document, canvas, images) {
    }
    let state = new Wy.Ref(view$init$Q8DocumentQ17HTMLCanvasElementQ5BoardaQ16HTMLImageElement$Q5State(document, canvas, Wy.copy(board), Wy.copy(images)));
    view$draw_board$Q5State$V(state.$ref);
-   c.addEventListener("click", function(state) {
+   c.addEventListener("click", function(window, state) {
       return function(e) {
-         return main$onclick_handler$Q10MouseEventqQ4view5State$V(e, state);
+         return main$onclick_handler$Q10MouseEventqQ4view5StateQ6Window$V(e, state, window);
       };
-   }(state));
+   }(window, state));
 }
 function model$ExposedSquare$type($) {
    return ($.rank >= 0) && ($.rank <= 8);
