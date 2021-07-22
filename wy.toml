@@ -9,10 +9,6 @@ platforms=["whiley","js"]
 [build.whiley]
 verify=false
 
-[build.boogie]
-verbose=true
-verify=true
-
 [build.js]
 standard="ES6"
 target="public/js"
@@ -24,4 +20,4 @@ length=3
 depth=1
 
 [dependencies]
-dom="0.1.0"
+dom="0.2.1"
