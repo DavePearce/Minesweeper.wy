@@ -4,10 +4,7 @@ authors=["David J. Pearce"]
 version="0.1.0"
 
 [build]
-platforms=["whiley","js"]
-
-[build.whiley]
-verify=false
+platforms=["whiley","boogie","js"]
 
 [build.js]
 standard="ES6"
