@@ -7,7 +7,7 @@ version="0.1.0"
 platforms=["whiley","boogie","js"]
 
 [build.boogie]
-timeout=120
+timeout=300
 
 [build.js]
 standard="ES6"
