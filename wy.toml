@@ -6,6 +6,9 @@ version="0.1.0"
 [build]
 platforms=["whiley","boogie","js"]
 
+[build.boogie]
+timeout=120
+
 [build.js]
 standard="ES6"
 target="public/js"
