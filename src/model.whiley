@@ -11,7 +11,7 @@ import uint from std::integer
 public type ExposedSquare is {
     bool holdsBomb,
     int rank
-} where rank >= 0 && rank <= 8
+} where rank >= 0 && rank <= 9
 
 // A hidden square is one which has yet to be revealed by the player.  A
 // hidden square may contain a bomb and/or have been "flagged" by the
@@ -27,7 +27,7 @@ public type Square is ExposedSquare | HiddenSquare
 
 // ExposedSquare constructor
 public export function ExposedSquare(uint rank, bool bomb) -> ExposedSquare
-requires rank <= 8:
+requires rank <= 9:
     return { rank: rank, holdsBomb: bomb }
 
 // HiddenSquare constructor
@@ -66,9 +66,10 @@ requires col < b.width && row < b.height:
     return b.squares[rowOffset + col]
 
 // Set the square on a given board at a given position
-export function set_square(Board b, uint col, uint row, Square sq) -> Board
+export function set_square(Board b, uint col, uint row, Square sq) -> (Board nb)
 // Ensure arguments within bounds
-requires col < b.width && row < b.height:
+requires col < b.width && row < b.height
+ensures b.width == nb.width && b.height == nb.height:
     int rowOffset = b.width * row // calculate start of row
     assume rowOffset >= 0
     assume rowOffset <= |b.squares|-b.width
@@ -98,22 +99,29 @@ requires col < b.width && row < b.height:
 // implementation, we also count any bomb on the central square itself.
 // This does not course any specific problem since an exposed square
 // containing a bomb signals the end of the game anyway.
-function determineRank(Board b, uint col, uint row) -> uint
-requires col < b.width && row < b.height:
-    uint rank = 0
+function determineRank(Board b, uint col, uint row) -> (uint rank)
+requires col < b.width && row < b.height
+ensures rank <= 9:
+    rank = 0
     // Calculate the rank
-    for r in max(0,row-1) .. min(b.height,row+2):
-        for c in max(0,col-1) .. min(b.width,col+2):
-            Square sq = get_square(b,(uint) c, (uint) r)
-            if holds_bomb(sq):
-                rank = rank + 1
+    col = (uint) max(0,col-1)
+    row = (uint) max(0,row-1)
     //
+    for i in 0..9
+    where rank <= i:
+       uint r = (i/3) + row
+       uint c = (i%3) + col
+       if c >= b.width || r >= b.height:
+        skip
+       else if holds_bomb(get_square(b,c,r)):
+        rank = rank + 1       
     return rank
 
 export
 // Attempt to recursively expose blank hidden square, starting from a given position.
-function expose_square(Board b, uint col, uint row) -> Board
-requires col < b.width && row < b.height:
+function expose_square(Board b, uint col, uint row) -> (Board nb)
+requires (col < b.width) && (row < b.height)
+ensures (b.width == nb.width) && (b.height == nb.height):
     // Check whether is blank hidden square
     Square sq = get_square(b,col,row)
     uint rank = determineRank(b,col,row)
@@ -128,10 +136,15 @@ requires col < b.width && row < b.height:
     return b
 
 // Recursively expose all valid neighbouring squares on the board
-function expose_neighbours(Board b, uint col, uint row) -> Board
-requires col < b.width && row < b.height:
-    for r in max(0,row-1) .. min(b.height,row+2):
-        for c in max(0,col-1) .. min(b.width,col+2):
+function expose_neighbours(Board b, uint col, uint row) -> (Board nb)
+requires col < b.width && row < b.height
+ensures (b.width == nb.width) && (b.height == nb.height):
+    uint width = b.width
+    uint height = b.height
+    for r in max(0,row-1) .. min(b.height,row+2)
+    where b.width == width && b.height == height:
+        for c in max(0,col-1) .. min(b.width,col+2)
+        where b.width == width && b.height == height:
            b = expose_square(b,(uint) c, (uint) r)
     //
     return b
