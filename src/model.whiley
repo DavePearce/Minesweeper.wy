@@ -47,7 +47,6 @@ public type Board is {
 // Create a board of given dimensions which contains no bombs, and
 // where all squares are hidden.
 public export function Board(uint width, uint height) -> Board:
-    assume width*height >= 0
     Square[] squares = [HiddenSquare(false,false); width * height]
     //
     return {
@@ -61,8 +60,6 @@ export function get_square(Board b, uint col, uint row) -> Square
 // Ensure arguments within bounds
 requires col < b.width && row < b.height:
     int rowOffset = b.width * row // calculate start of row
-    assume rowOffset >= 0
-    assume rowOffset <= |b.squares|-b.width
     return b.squares[rowOffset + col]
 
 // Set the square on a given board at a given position
@@ -71,8 +68,6 @@ export function set_square(Board b, uint col, uint row, Square sq) -> (Board nb)
 requires col < b.width && row < b.height
 ensures b.width == nb.width && b.height == nb.height:
     int rowOffset = b.width * row // calculate start of row
-    assume rowOffset >= 0
-    assume rowOffset <= |b.squares|-b.width
     b.squares[rowOffset + col] = sq
     return b
 
