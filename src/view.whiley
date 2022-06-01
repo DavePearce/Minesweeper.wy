@@ -1,4 +1,4 @@
-import uint from std::integer
+import uint from std::int
 import Document,CanvasRenderingContext2D from w3c::dom
 import HTMLCanvasElement, HTMLImageElement from w3c::dom
 

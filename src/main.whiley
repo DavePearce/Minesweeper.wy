@@ -1,5 +1,5 @@
 
-import uint from std::integer
+import uint from std::int
 import uinteger from js::core
 import random from js::math
 import Document, Window, CanvasRenderingContext2D from w3c::dom

@@ -1,5 +1,5 @@
 import std::math with min,max
-import uint from std::integer
+import uint from std::int
 
 // =================================================================
 // Squares
